@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
+import utils.UploadPath;
 
 /**
  *
@@ -40,13 +41,14 @@ public class UploadServlets extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
-        String pathToImageFolder = "C:\\Users\\pupil\\Documents\\UploadFolder";
+        //String pathToImageFolder = "C:\\Users\\pupil\\Documents\\UploadFolder";
+        String pathToImageFolder = UploadPath.getPath("path");
         Part filePart = request.getPart("file");
         String fileName = getFileName(filePart);
         
         OutputStream out = null;
         InputStream filecontent = null;
-        
+     try{   
         out = new FileOutputStream
         (new File(
                 pathToImageFolder
@@ -62,7 +64,15 @@ public class UploadServlets extends HttpServlet {
         
         }
         
-    }
+    }finally{
+         if(out != null){
+             out.close();
+         }
+         if(filecontent != null){
+             filecontent.close();
+         }
+      }
+    }   
     private String getFileName(Part part){
         String partHeader = part.getHeader("content-disposition");
         for(String content : part.getHeader("content-disposition").split(";")){
