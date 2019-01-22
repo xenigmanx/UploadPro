@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
@@ -27,7 +30,7 @@ import utils.UploadPath;
 @WebServlet(name = "UploadServlets", urlPatterns = {"/upload"})
 @MultipartConfig
 public class UploadServlets extends HttpServlet {
-
+        private List<String> listFiles = new ArrayList<>();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -72,7 +75,24 @@ public class UploadServlets extends HttpServlet {
              filecontent.close();
          }
       }
-    }   
+        this.readFiles(new File(pathToImageFolder));
+        request.setAttribute("listFiles",listFiles);
+        request.getRequestDispatcher("/index.jsp").forward(request, response);
+    }
+    
+    public void readFiles(File baseDirectory){
+    if (baseDirectory.isDirectory()){
+        for (File file : baseDirectory.listFiles()) {
+            if(file.isFile()){
+                this.listFiles.add(file.getName() + " файл");
+            }else {
+                this.listFiles.add(file.getName() + " каталог");
+                readFiles(file);
+            }
+        }
+      }
+    }
+     //this.ReadFiles
     private String getFileName(Part part){
         String partHeader = part.getHeader("content-disposition");
         for(String content : part.getHeader("content-disposition").split(";")){

@@ -4,6 +4,7 @@
     Author     : pupil
 --%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -30,5 +31,10 @@
         <br>
         файл с https://radikal.ru
         <br><img src="https://a.radikal.ru/a35/1901/43/9c99e630b667.png">
+        <ul>
+            <c:forEach var="fileName" items="${listFiles}">
+                <li>${fileName}</li>
+            </c:forEach>
+        </ul>
     </body>
 </html>
